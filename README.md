@@ -145,3 +145,4 @@ wifi-llm-ops/
 - [HPE Marvis AI](https://www.hpe.com/us/en/marvis-ai.html)
 - [Juniper Mist AI | AI-Native Networking](https://www.juniper.net/us/en/products/mist-ai.html)
 - [UJIIndoorLoc Dataset](https://archive.ics.uci.edu/dataset/310/ujiindoorloc)
+- 开源数据可在本说明第三个链接下载

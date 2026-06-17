@@ -4,7 +4,7 @@ LLM 排障助手模块
 """
 import json
 import os
-from config import OUTPUT_DIR, LLM_MODEL, LLM_TEMPERATURE
+from config import OUTPUT_DIR, LLM_MODEL, LLM_TEMPERATURE, WEAK_RSSI_THRESHOLD, MIN_VISIBLE_AP
 
 # ============ WiFi 排障知识库 ============
 WIFI_KNOWLEDGE_BASE = """

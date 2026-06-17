@@ -3,9 +3,10 @@
 参考 Juniper Mist AI / Marvis AI 思路
 """
 
-# 数据路径
-DATA_PATH = r"C:\Users\dengg\Desktop\trainingData.csv"
-OUTPUT_DIR = r"C:\Users\dengg\Desktop\wifi-llm-ops\output"
+# 数据路径（自动适配当前用户）
+import os
+DATA_PATH = os.path.join(os.path.expanduser("~"), "Desktop", "trainingData.csv")
+OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
 
 # RSSI 阈值
 RSSI_NO_SIGNAL = 100       # 100 表示无信号
