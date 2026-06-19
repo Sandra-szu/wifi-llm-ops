@@ -177,7 +177,7 @@ def render_diagnosis(weak_points, building_stats):
     st.markdown("---")
     st.header("🤖 AI 排障助手")
 
-    if st.button("🚀 生成诊断报告", type="primary", use_container_width=True):
+    if st.button("🚀 生成诊断报告", type="primary", width='stretch'):
         with st.spinner("AI 正在分析弱覆盖数据..."):
             result = simulate_diagnosis(weak_points, building_stats)
 
@@ -257,14 +257,14 @@ def main():
         df_plot = df_filtered.sample(5000, random_state=42) if len(df_filtered) > 5000 else df_filtered
     else:
         df_plot = df_filtered
-    st.plotly_chart(render_heatmap(df_plot), use_container_width=True)
+    st.plotly_chart(render_heatmap(df_plot), width='stretch')
 
     # 统计图表
     col_l, col_r = st.columns(2)
     with col_l:
-        st.plotly_chart(render_ap_histogram(df_filtered), use_container_width=True)
+        st.plotly_chart(render_ap_histogram(df_filtered), width='stretch')
     with col_r:
-        st.plotly_chart(render_rssi_distribution(df_filtered), use_container_width=True)
+        st.plotly_chart(render_rssi_distribution(df_filtered), width='stretch')
 
     # 弱覆盖告警表格
     st.markdown("---")
@@ -280,7 +280,7 @@ def main():
                 "max_rssi": "{:.0f}", "avg_rssi": "{:.0f}",
                 "LONGITUDE": "{:.2f}", "LATITUDE": "{:.2f}",
             }),
-            use_container_width=True,
+            width='stretch',
         )
         st.caption(f"共 {len(weak_filtered)} 条，显示前 50 条")
     else:

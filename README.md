@@ -44,22 +44,35 @@ UJIIndoorLoc 数据
 
 ### 环境要求
 
-- Python 3.8+
+- Python 3.8+（已安装 Python 3.14 也兼容）
 - 依赖: `pip install pandas numpy plotly streamlit`
+- 数据集: [UJIIndoorLoc trainingData.csv](https://archive.ics.uci.edu/dataset/310/ujiindoorloc) 放到桌面（约 41 MB）
 
-### 运行步骤
+### 运行步骤（一键启动）
 
+**方式一：双击 `run.bat`**
+- 自动检查 Python → 安装依赖 → 处理数据 → 启动服务 → 打开浏览器
+- 首次运行耗时约 30-60 秒，后续运行更快
+
+**方式二：双击 `启动.bat`**
+- 如果上次未正常退出导致 8501 端口被占用，用这个
+- 会自动清理残留进程后再启动
+
+**方式三：命令行**
 ```bash
-# 1. 下载 UJIIndoorLoc trainingData.csv 放到桌面 (或修改 config.py 中的路径)
+# 1. 安装依赖
+pip install -r requirements.txt
 
-# 2. 运行数据处理流水线
+# 2. 处理数据（首次或数据更新后执行）
 python data_processor.py
 
-# 3. 启动 Streamlit 前端
+# 3. 启动前端
 streamlit run app.py
 
 # 4. 浏览器打开 http://localhost:8501
 ```
+
+> **注意**：`.bat` 文件已适配中文 Windows 系统（GBK 编码），双击启动时 CMD 窗口内中文显示正常。如出现提示"未找到 Python"，请检查安装时是否勾选了"Add Python to PATH"。
 
 ### 项目结构
 
@@ -69,6 +82,9 @@ wifi-llm-ops/
 ├── data_processor.py   # 数据处理流水线
 ├── llm_diagnosis.py    # LLM 排障助手 + WiFi 知识库
 ├── app.py              # Streamlit 前端 Demo
+├── run.bat             # 一键启动（双击即可）
+├── 启动.bat             # 启动 + 端口清理（残留进程时使用）
+├── requirements.txt    # Python 依赖清单
 ├── output/             # 数据处理结果
 │   ├── all_points_annotated.csv  # 全量数据 (含质量评估)
 │   ├── weak_points.csv           # 弱覆盖异常点
@@ -136,9 +152,10 @@ wifi-llm-ops/
 - ✅ Streamlit 交互式前端 (`app.py`)
 - ✅ 数据处理结果 (output/)
 - ✅ README 说明文档
-- ⬜ PPT 演示文稿 (7页，见方案文档第7章)
-- ⬜ 测试截图
-- ⬜ GitHub 仓库
+- ✅ 一键启动脚本 (`run.bat` + `启动.bat`)
+- ✅ PPT 演示文稿 (7页，见方案文档第7章)
+- ✅测试截图
+- ✅GitHub 仓库
 
 ## 参考来源
 
