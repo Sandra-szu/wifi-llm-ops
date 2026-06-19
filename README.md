@@ -1,3 +1,97 @@
+# 校园 WiFi 体验保障与 LLM 运维助手
+
+> 参考 HPE Juniper Networking Mist AI / Marvis AI 的无线网络智能运维思路  
+> FDE 无线网络智能运维培训 · 场景 4
+
+## 项目概述
+
+本项目构建了一个**校园 WiFi 体验保障原型系统**，基于公开数据集 UJIIndoorLoc，实现：
+
+- 📡 **RSSI 质量评估**：计算每个位置的可见 AP 数、最强信号、平均信号
+- 🗺️ **楼层热力图**：可视化展示 good/medium/poor 覆盖区域
+- 🚨 **弱覆盖异常检测**：自动识别弱信号点位（378 个告警）
+- 🤖 **LLM 排障助手**：基于 RSSI 证据 + WiFi 知识库，输出结构化诊断报告
+- 📊 **Streamlit 交互前端**：楼栋/楼层筛选 + 诊断卡片 + 报告导出
+
+## 系统架构
+
+```
+UJIIndoorLoc 数据
+      ↓
+[数据层]   pandas 加载 → 100→NaN 清洗 → 质量评估
+      ↓
+[检测层]   阈值规则: max_rssi<-85dBm, visible_ap<3
+      ↓
+[知识库]   WiFi 排障知识 (AP功率/遮挡/干扰/离线/容量/漫游)
+      ↓
+[LLM层]    Prompt + 证据 + 知识库 → 结构化诊断 JSON
+      ↓
+[前端层]   Streamlit + Plotly → 热力图 + 告警 + 诊断卡片
+```
+
+## 数据集
+
+- **来源**: [UJIIndoorLoc](https://archive.ics.uci.edu/dataset/310/ujiindoorloc) (UCI ML Repository)
+- **格式**: CSV, 19,937 采样点 × 529 列
+- **字段**:
+  - `WAP001` ~ `WAP520`: 各 AP 的 RSSI 值 (dBm)，`100` = 无信号
+  - `LONGITUDE`, `LATITUDE`: 经纬度坐标
+  - `FLOOR`: 楼层编号
+  - `BUILDINGID`: 楼栋编号
+  - `SPACEID`, `RELATIVEPOSITION`, `USERID`, `PHONEID`, `TIMESTAMP`: 辅助信息
+
+## 快速开始
+
+### 环境要求
+
+- Python 3.8+（已安装 Python 3.14 也兼容）
+- 依赖: `pip install pandas numpy plotly streamlit`
+- 数据集: [UJIIndoorLoc trainingData.csv](https://archive.ics.uci.edu/dataset/310/ujiindoorloc) 放到桌面（约 41 MB）
+
+### 运行步骤（一键启动）
+
+**方式一：双击 `run.bat`**
+- 自动检查 Python → 安装依赖 → 处理数据 → 启动服务 → 打开浏览器
+- 首次运行耗时约 30-60 秒，后续运行更快
+
+**方式二：双击 `启动.bat`**
+- 如果上次未正常退出导致 8501 端口被占用，用这个
+- 会自动清理残留进程后再启动
+
+**方式三：命令行**
+```bash
+# 1. 安装依赖
+pip install -r requirements.txt
+
+# 2. 处理数据（首次或数据更新后执行）
+python data_processor.py
+
+# 3. 启动前端
+streamlit run app.py
+
+# 4. 浏览器打开 http://localhost:8501
+```
+
+> **注意**：`.bat` 文件已适配中文 Windows 系统（GBK 编码），双击启动时 CMD 窗口内中文显示正常。如出现提示"未找到 Python"，请检查安装时是否勾选了"Add Python to PATH"。
+
+### 项目结构
+
+```
+wifi-llm-ops/
+├── config.py           # 配置文件 (路径/阈值/LLM设置)
+├── data_processor.py   # 数据处理流水线
+├── llm_diagnosis.py    # LLM 排障助手 + WiFi 知识库
+├── app.py              # Streamlit 前端 Demo
+├── run.bat             # 一键启动（双击即可）
+├── 启动.bat             # 启动 + 端口清理（残留进程时使用）
+├── requirements.txt    # Python 依赖清单
+├── output/             # 数据处理结果
+│   ├── all_points_annotated.csv  # 全量数据 (含质量评估)
+│   ├── weak_points.csv           # 弱覆盖异常点
+│   └── building_stats.csv        # 楼层覆盖统计
+└── README.md
+```
+
 ## 信号质量规则
 
 | 等级 | 条件 | 颜色 |
